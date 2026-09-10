@@ -1,0 +1,31 @@
+.navbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.navbar-brand {
+  display: flex; align-items: center; gap: .5rem;
+  font-weight: 700; font-size: 1.05rem; text-decoration: none; color: var(--text);
+}
+.brand-icon { font-size: 1.3rem; }
+.navbar-links { display: flex; gap: .25rem; flex: 1; }
+.nav-link {
+  padding: .4rem .8rem; border-radius: 8px;
+  font-size: .88rem; font-weight: 500; color: var(--text-muted);
+  text-decoration: none; transition: background .15s, color .15s;
+}
+.nav-link:hover { background: var(--bg); color: var(--text); }
+.navbar-user { display: flex; align-items: center; gap: 1rem; margin-left: auto; }
+.user-name { font-size: .88rem; color: var(--text-muted); }
+.btn-logout {
+  background: none; border: 1.5px solid var(--border); border-radius: 8px;
+  padding: .35rem .8rem; font-size: .82rem; cursor: pointer; color: var(--text-muted);
+}
+.btn-logout:hover { color: var(--danger); border-color: var(--danger); }

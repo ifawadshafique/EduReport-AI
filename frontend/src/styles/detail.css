@@ -1,0 +1,293 @@
+/* ── Detail page layout ─────────────────────────────────────────── */
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 0 .5rem;
+}
+
+.detail-header h2 {
+  margin: .25rem 0 .5rem;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.back-link {
+  font-size: .85rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  display: block;
+  margin-bottom: .2rem;
+  transition: color .15s;
+}
+.back-link:hover { color: var(--primary); }
+
+.badge-grade {
+  display: inline-block;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: .75rem;
+  font-weight: 600;
+  padding: .2rem .6rem;
+  border-radius: 20px;
+}
+
+/* ── Tab bar ────────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  gap: .25rem;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  background: none;
+  border: none;
+  padding: .6rem 1.1rem;
+  font-size: .9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -2px;
+  transition: color .15s, border-color .15s;
+  border-radius: 6px 6px 0 0;
+}
+.tab:hover { color: var(--text); }
+.tab.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+  font-weight: 600;
+}
+
+/* ── Tab content areas ──────────────────────────────────────────── */
+.tab-content { display: flex; flex-direction: column; gap: 1rem; }
+
+/* ── Stats bar (Overview) ───────────────────────────────────────── */
+.stats-bar {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+  margin-bottom: .5rem;
+}
+
+.stat-pill {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: .6rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .15rem;
+  min-width: 120px;
+}
+.stat-pill span {
+  font-size: .75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.stat-pill strong {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ── Section cards ──────────────────────────────────────────────── */
+.section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
+.section-card h4 {
+  margin: 0;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.section-card textarea,
+.section-card input,
+.section-card select {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: .55rem .8rem;
+  font-size: .9rem;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--text);
+  resize: vertical;
+  transition: border-color .15s;
+}
+.section-card textarea:focus,
+.section-card input:focus,
+.section-card select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ── Inline add forms ───────────────────────────────────────────── */
+.inline-form {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.inline-form input,
+.inline-form select {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: .5rem .75rem;
+  font-size: .9rem;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+}
+.inline-form input:focus,
+.inline-form select:focus { outline: none; border-color: var(--primary); }
+
+/* ── Form rows (multi-column) ───────────────────────────────────── */
+.form-row {
+  display: flex;
+  gap: .75rem;
+  flex-wrap: wrap;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  flex: 1;
+  min-width: 140px;
+}
+.field label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.field input,
+.field select {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: .5rem .75rem;
+  font-size: .9rem;
+  font-family: inherit;
+  background: var(--bg);
+  color: var(--text);
+}
+.field input:focus,
+.field select:focus { outline: none; border-color: var(--primary); }
+
+/* ── Data tables ────────────────────────────────────────────────── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+.data-table th {
+  text-align: left;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .5rem .75rem;
+  border-bottom: 1.5px solid var(--border);
+}
+.data-table td {
+  padding: .65rem .75rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface); }
+
+.status-badge {
+  display: inline-block;
+  padding: .2rem .55rem;
+  border-radius: 20px;
+  font-size: .78rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.type-badge {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: .15rem .5rem;
+  border-radius: 20px;
+  text-transform: capitalize;
+}
+.status-select {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: .25rem .5rem;
+  font-size: .85rem;
+  font-weight: 600;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.row-actions {
+  display: flex;
+  gap: .35rem;
+  white-space: nowrap;
+}
+
+/* ── State helpers ──────────────────────────────────────────────── */
+.inline-error {
+  font-size: .85rem;
+  color: #ef4444;
+  margin: 0;
+  padding: .4rem .75rem;
+  background: #ef444414;
+  border-radius: 8px;
+}
+.empty-hint {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 2rem 0;
+  font-size: .9rem;
+}
+.loading-state {
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* ── Button helpers ─────────────────────────────────────────────── */
+.btn-danger-ghost {
+  background: none;
+  border: 1px solid #ef444440;
+  color: #ef4444;
+  border-radius: 7px;
+  padding: .25rem .6rem;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-danger-ghost:hover { background: #ef444415; }
+.btn-ghost {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: 7px;
+  padding: .25rem .6rem;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: background .15s;
+}
+.btn-ghost:hover { background: var(--surface); }

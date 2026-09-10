@@ -1,0 +1,49 @@
+.page-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 1.75rem; flex-wrap: wrap; gap: 1rem;
+}
+.page-header h2 { font-size: 1.5rem; font-weight: 700; }
+.page-sub { color: var(--text-muted); font-size: .88rem; margin-top: .15rem; }
+.students-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+.student-card {
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow); padding: 1.25rem;
+  transition: box-shadow .15s;
+}
+.student-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
+.student-card.archived { opacity: .65; }
+.student-card-header { display: flex; align-items: center; gap: .9rem; margin-bottom: 1rem; }
+.student-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: .95rem; flex-shrink: 0;
+}
+.student-avatar.muted { background: #94a3b8; }
+.student-card-header h3 { font-size: 1rem; font-weight: 600; }
+.badge-grade {
+  background: #eff6ff; color: var(--accent);
+  border-radius: 6px; padding: .1rem .5rem; font-size: .78rem; font-weight: 600;
+}
+.badge-archived {
+  background: #f1f5f9; color: #64748b;
+  border-radius: 6px; padding: .1rem .5rem; font-size: .78rem; font-weight: 600;
+}
+.student-stats { display: flex; gap: 1rem; margin-bottom: 1rem; }
+.stat { display: flex; flex-direction: column; }
+.stat-label { font-size: .75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+.stat-value { font-size: 1.1rem; font-weight: 700; }
+.student-card-actions { display: flex; gap: .4rem; flex-wrap: wrap; }
+.empty-state {
+  text-align: center; padding: 4rem 2rem; background: var(--surface);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+.empty-state h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: .3rem; }
+.empty-state p { color: var(--text-muted); margin-bottom: 1.25rem; }
+.archived-section { margin-top: 2rem; }
+.archived-section summary { cursor: pointer; font-weight: 600; color: var(--text-muted); font-size: .9rem; margin-bottom: .75rem; }

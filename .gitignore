@@ -1,0 +1,30 @@
+# Node
+node_modules/
+dist/
+build/
+.npm/
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.env
+
+# Database
+*.sqlite
+*.sqlite3
+backend/instance/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+API/
+api/
+*.env
+backend/.env
