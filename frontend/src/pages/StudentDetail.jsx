@@ -5,7 +5,7 @@ import Navbar from "../components/Navbar";
 import SubjectPicker from "../components/SubjectPicker";
 import "../styles/detail.css";
 
-const TABS = ["Overview", "Attendance", "Assessments", "Topics"];
+const TABS = ["Overview", "Attendance", "Assessments", "Topics", "Reports"];
 const STATUS_COLORS = {
   present: "#22c55e", late: "#f59e0b", absent: "#ef4444", excused: "#8b5cf6",
 };
@@ -377,6 +377,56 @@ function TopicsTab({ studentId }) {
   );
 }
 
+// ─── Reports Tab ────────────────────────────────────────────────────────────────
+function ReportsTab({ studentId }) {
+  const [reports, setReports] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const load = useCallback(async () => {
+    try {
+      const data = await api.getStudentReports(studentId);
+      setReports(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  }, [studentId]);
+
+  useEffect(() => { load(); }, [load]);
+
+  if (loading) return <div className="tab-content"><p>Loading reports...</p></div>;
+
+  return (
+    <div className="tab-content">
+      {reports.length === 0 ? (
+        <p className="empty-hint">No reports generated yet. Click "Generate AI Report" above to draft one.</p>
+      ) : (
+        <table className="data-table">
+          <thead><tr><th>Period</th><th>Generated At</th><th>Status</th><th>Provider</th><th></th></tr></thead>
+          <tbody>
+            {reports.map((r) => (
+              <tr key={r.id}>
+                <td>{r.period_label || "Unknown Term"}</td>
+                <td>{new Date(r.created_at).toLocaleDateString()}</td>
+                <td>
+                  <span className="type-badge" style={{ background: r.status === 'draft' ? '#f59e0b22' : '#22c55e22', color: r.status === 'draft' ? '#f59e0b' : '#22c55e' }}>
+                    {r.status}
+                  </span>
+                </td>
+                <td style={{ fontSize: "0.85rem", color: "#64748b" }}>{r.ai_provider || "Legacy Model"}</td>
+                <td className="row-actions">
+                  <Link to={`/reports/${r.id}`} className="btn-primary" style={{ padding: "0.25rem 0.6rem", fontSize: "0.85rem", textDecoration: "none" }}>View / Edit</Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function StudentDetail() {
   const { id } = useParams();
@@ -443,6 +493,7 @@ export default function StudentDetail() {
         {tab === "Attendance" && <AttendanceTab studentId={parseInt(id)} />}
         {tab === "Assessments" && <AssessmentsTab studentId={parseInt(id)} />}
         {tab === "Topics" && <TopicsTab studentId={parseInt(id)} />}
+        {tab === "Reports" && <ReportsTab studentId={parseInt(id)} />}
       </div>
     </div>
   );

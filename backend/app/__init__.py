@@ -17,6 +17,10 @@ def create_app(config_class=DevelopmentConfig):
     app.config.from_object(config_class)
 
     # Extensions
+    # Set check_same_thread=False for SQLite
+    if app.config['SQLALCHEMY_DATABASE_URI'].startswith('sqlite'):
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'connect_args': {'check_same_thread': False}}
+
     db.init_app(app)
     jwt.init_app(app)
     CORS(app, resources={r"/api/*": {"origins": "*"}})

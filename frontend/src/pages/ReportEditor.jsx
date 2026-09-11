@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { api } from "../api/client";
 import Navbar from "../components/Navbar";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function ReportEditor() {
   const { id } = useParams();
@@ -10,6 +12,7 @@ export default function ReportEditor() {
   const [student, setStudent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [error, setError] = useState("");
 
   const loadData = useCallback(async () => {
@@ -43,6 +46,52 @@ export default function ReportEditor() {
     setReport({ ...report, [key]: value });
   };
 
+  const exportPDF = async () => {
+    setExporting(true);
+    const element = document.getElementById("report-pdf-container");
+    if (!element) {
+      setExporting(false);
+      return;
+    }
+
+    try {
+      // Create a temporary clone to convert textareas to static HTML for printing all text
+      const clone = element.cloneNode(true);
+      const host = document.createElement("div");
+      host.style.position = "absolute";
+      host.style.top = "-9999px";
+      host.style.width = "800px";
+      host.appendChild(clone);
+      document.body.appendChild(host);
+
+      // Convert all textareas in clone to divs with white-space pre-wrap
+      const textareas = clone.querySelectorAll("textarea");
+      textareas.forEach(ta => {
+        const div = document.createElement("div");
+        div.textContent = ta.value;
+        div.style.whiteSpace = "pre-wrap";
+        div.style.marginBottom = "1rem";
+        div.style.lineHeight = "1.5";
+        ta.parentNode.replaceChild(div, ta);
+      });
+
+      const canvas = await html2canvas(clone, { scale: 2, useCORS: true });
+      document.body.removeChild(host);
+
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "mm", "a4");
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(imgData, "PNG", 0, 10, pdfWidth, pdfHeight);
+      pdf.save(`${student?.full_name || "Student"}_Report.pdf`);
+    } catch (e) {
+      alert("Failed to export PDF");
+      console.error(e);
+    }
+    setExporting(false);
+  };
+
   if (loading) return <div className="page"><Navbar /><div className="container loading-state">Loading AI Report…</div></div>;
   if (!report) return <div className="page"><Navbar /><div className="container"><p className="inline-error">{error || "Report not found"}</p></div></div>;
 
@@ -57,7 +106,10 @@ export default function ReportEditor() {
         </div>
         <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
           {error && <span className="inline-error" style={{ margin: 0 }}>{error}</span>}
-          <button className="btn-primary" onClick={save} disabled={saving}>
+          <button className="btn-secondary" onClick={exportPDF} disabled={exporting || saving}>
+            {exporting ? "Generating PDF..." : "📄 Download PDF"}
+          </button>
+          <button className="btn-primary" onClick={save} disabled={saving || exporting}>
             {saving ? "Saving…" : "💾 Save Report"}
           </button>
         </div>
@@ -66,7 +118,7 @@ export default function ReportEditor() {
       <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
         
         {/* Editor Pane (Left) */}
-        <div style={{ flex: 2, overflowY: "auto", padding: "2rem", background: "var(--bg)" }}>
+        <div id="report-pdf-container" style={{ flex: 2, overflowY: "auto", padding: "2rem", background: "var(--bg)" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem", maxWidth: "800px", margin: "0 auto" }}>
             
             <div className="section-card">

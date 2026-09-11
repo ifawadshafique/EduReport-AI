@@ -9,9 +9,13 @@ class Config:
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        "DATABASE_URL", "sqlite:///edureport.db"
-    )
+    _db = os.environ.get("DATABASE_URL", "sqlite:///edureport.db")
+    if _db.startswith("sqlite") and "check_same_thread" not in _db:
+        if "?" in _db:
+            _db += "&check_same_thread=False"
+        else:
+            _db += "?check_same_thread=False"
+    SQLALCHEMY_DATABASE_URI = _db
 
 
 class ProductionConfig(Config):

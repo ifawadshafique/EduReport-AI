@@ -1,6 +1,6 @@
 import os
 import json
-from groq import Groq
+import google.generativeai as genai
 from app.models.student import Student
 from app.models.attendance import Attendance
 from app.models.assessment import Assessment
@@ -9,22 +9,23 @@ from app.models.topic import Topic
 # We will instantiate the client lazily to ensure GROQ_API_KEY is loaded from .env
 _client = None
 
-def get_groq_client():
-    global _client
-    if not _client:
-        api_key = os.environ.get("GROQ_API_KEY")
-        if not api_key:
-            raise ValueError("GROQ_API_KEY environment variable is missing")
-        _client = Groq(api_key=api_key)
-    return _client
+def _exec_gemini(key, p, q):
+    try:
+        genai.configure(api_key=key)
+        model = genai.GenerativeModel('models/gemini-3.6-flash')
+        res = model.generate_content(p)
+        raw = res.text.replace("```json", "").replace("```", "").strip()
+        q.put({"success": True, "data": raw})
+    except Exception as e:
+        q.put({"success": False, "error": str(e)})
 
 def generate_full_report(student_id):
     """
-    Gather all student data and prompt Groq's Llama 3 to generate a 6-section JSON report.
+    Constructs a detailed prompt from the student's entire data model
+    and hits the Gemini API to get a structured JSON report.
     Returns a dictionary with exactly 6 keys:
     overall_summary, academic_performance, attendance_and_participation, topics_covered, strengths_and_weaknesses, next_steps
     """
-    client = get_groq_client()
     student = Student.query.get(student_id)
     if not student:
         raise ValueError("Student not found")
@@ -79,25 +80,18 @@ You MUST output your response in JSON format. The JSON object MUST contain exact
 Return STRICTLY valid JSON only. Keep the tone professional, objective, and supportive. Use paragraphs (\\n\\n) for readability within the string values.
 """
 
-    chat_completion = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a helpful assistant that outputs only valid JSON.",
-            },
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
-        model="mixtral-8x7b-32768",
-        response_format={"type": "json_object"},
-        temperature=0.4,
-    )
-
-    response_content = chat_completion.choices[0].message.content
     try:
-        report_data = json.loads(response_content)
+        api_key = os.environ.get("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY environment variable is missing")
+            
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('models/gemini-3.6-flash')
+        res = model.generate_content(prompt)
+        raw_text = res.text.replace("```json", "").replace("```", "").strip()
+
+        report_data = json.loads(raw_text)
+        
         # Ensure fallback for missing keys
         return {
             "overall_summary": report_data.get("overall_summary", ""),
@@ -108,5 +102,5 @@ Return STRICTLY valid JSON only. Keep the tone professional, objective, and supp
             "next_steps": report_data.get("next_steps", "")
         }
     except json.JSONDecodeError:
-        raise ValueError("AI returned invalid JSON response")
+        raise ValueError(f"AI returned invalid JSON response")
 
